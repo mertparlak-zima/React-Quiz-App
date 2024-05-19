@@ -4,6 +4,7 @@ import Main from "./components/Main";
 import Loader from "./components/Loader";
 import Error from "./components/Error";
 import Ready from "./components/Ready";
+import Question from "./components/Question";
 
 function reducer(state, action) {
   try {
@@ -14,6 +15,8 @@ function reducer(state, action) {
         return { ...state, status: "error" };
       case "dataFailed":
         return { ...state, status: "error" };
+      case "active":
+        return { ...state, status: "active" };
       default: {
         throw new Error(`Unsupported action type ${action.type}`);
       }
@@ -44,7 +47,10 @@ export default function App() {
       <Main>
         {status === "loading" && <Loader />}
         {status === "error" && <Error />}
-        {status === "ready" && <Ready questionsLength={questionsLength} />}
+        {status === "ready" && (
+          <Ready questionsLength={questionsLength} dispatch={dispatch} />
+        )}
+        {status === "active" && <Question />}
       </Main>
     </div>
   );
