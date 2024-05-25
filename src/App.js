@@ -7,6 +7,7 @@ import Ready from "./components/Ready";
 import Question from "./components/Question";
 import NextButton from "./components/NextButton";
 import Progress from "./components/Progress";
+import FinishScreen from "./components/FinishScreen";
 
 function reducer(state, action) {
   try {
@@ -19,6 +20,8 @@ function reducer(state, action) {
         return { ...state, status: "error" };
       case "active":
         return { ...state, status: "active" };
+      case "finished":
+        return { ...state, status: "finished" };
       case "newAnswer":
         const currentQuestion = state.questions[state.index];
 
@@ -98,15 +101,20 @@ export default function App() {
               dispatch={dispatch}
               answer={answer}
             />
-            {/* check if it is the last question */}
-            {answer !== null && questions.length - 1 !== answer && (
-              <NextButton dispatch={dispatch} answer={answer}>
+            {answer !== null && (
+              <NextButton
+                dispatch={dispatch}
+                answer={answer}
+                questionsLength={questionsLength}
+              >
                 Next
               </NextButton>
             )}
           </>
         )}
-        {status === "finished" && <div>bitti {points}</div>}
+        {status === "finished" && (
+          <FinishScreen points={points} maxPoints={maxPoints} />
+        )}
       </Main>
     </div>
   );
