@@ -107,7 +107,7 @@ export default function App() {
                 answer={answer}
                 questionsLength={questionsLength}
               >
-                Next
+                {index === questionsLength - 1 ? "Finish" : "Next"}
               </NextButton>
             )}
           </>
