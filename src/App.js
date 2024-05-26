@@ -52,11 +52,9 @@ function reducer(state, action) {
       case "restart":
         console.log("restart");
         return {
-          ...state,
+          ...initialState,
           status: "ready",
-          answer: null,
-          index: 0,
-          points: 0,
+          questions: state.questions,
         };
       default: {
         throw new Error(`Unsupported action type ${action.type}`);
