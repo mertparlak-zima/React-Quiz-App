@@ -49,6 +49,15 @@ function reducer(state, action) {
           index: state.index + 1,
           answer: null,
         };
+      case "restart":
+        console.log("restart");
+        return {
+          ...state,
+          status: "ready",
+          answer: null,
+          index: 0,
+          points: 0,
+        };
       default: {
         throw new Error(`Unsupported action type ${action.type}`);
       }
@@ -125,6 +134,7 @@ export default function App() {
             points={points}
             maxPoints={maxPoints}
             highscore={highscore}
+            dispatch={dispatch}
           />
         )}
       </Main>
