@@ -50,7 +50,6 @@ function reducer(state, action) {
           answer: null,
         };
       case "restart":
-        console.log("restart");
         return {
           ...initialState,
           status: "ready",
