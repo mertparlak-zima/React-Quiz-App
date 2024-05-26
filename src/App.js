@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import { act, useEffect, useReducer } from "react";
 import Header from "./components/Header";
 import Main from "./components/Main";
 import Loader from "./components/Loader";
@@ -8,6 +8,10 @@ import Question from "./components/Question";
 import NextButton from "./components/NextButton";
 import Progress from "./components/Progress";
 import FinishScreen from "./components/FinishScreen";
+import Timer from "./components/Timer";
+import Footer from "./components/Footer";
+
+const SECONDS_PER_QUESTION = 30;
 
 function reducer(state, action) {
   try {
@@ -19,7 +23,11 @@ function reducer(state, action) {
       case "dataFailed":
         return { ...state, status: "error" };
       case "active":
-        return { ...state, status: "active" };
+        return {
+          ...state,
+          status: "active",
+          secondsRemaining: state.questions.length * SECONDS_PER_QUESTION,
+        };
       case "finished":
         const highscore = JSON.parse(localStorage.getItem("highscore"));
 
@@ -55,6 +63,13 @@ function reducer(state, action) {
           status: "ready",
           questions: state.questions,
         };
+      case "timer": {
+        return {
+          ...state,
+          secondsRemaining: state.secondsRemaining - 1,
+          status: state.secondsRemaining === 0 ? "finished" : state.status,
+        };
+      }
       default: {
         throw new Error(`Unsupported action type ${action.type}`);
       }
@@ -73,10 +88,13 @@ const initialState = {
   answer: null,
   points: 0,
   highscore: storedHScore ? storedHScore : 0,
+  secondsRemaining: null,
 };
 export default function App() {
-  const [{ questions, status, index, answer, points, highscore }, dispatch] =
-    useReducer(reducer, initialState);
+  const [
+    { questions, status, index, answer, points, highscore, secondsRemaining },
+    dispatch,
+  ] = useReducer(reducer, initialState);
 
   const questionsLength = questions.length;
   const maxPoints = questions.reduce(
@@ -115,15 +133,18 @@ export default function App() {
               dispatch={dispatch}
               answer={answer}
             />
-            {answer !== null && (
-              <NextButton
-                dispatch={dispatch}
-                questionsLength={questionsLength}
-                index={index}
-              >
-                {index === questionsLength - 1 ? "Finish" : "Next"}
-              </NextButton>
-            )}
+            <Footer>
+              <Timer secondsRemaining={secondsRemaining} dispatch={dispatch} />
+              {answer !== null && (
+                <NextButton
+                  dispatch={dispatch}
+                  questionsLength={questionsLength}
+                  index={index}
+                >
+                  {index === questionsLength - 1 ? "Finish" : "Next"}
+                </NextButton>
+              )}
+            </Footer>
           </>
         )}
         {status === "finished" && (
