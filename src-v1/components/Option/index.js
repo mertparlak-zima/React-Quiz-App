@@ -1,9 +1,6 @@
 import classNames from "classnames";
-import { useQuiz } from "../../contexts/QuizContext";
 
-function Option({ question, answer }) {
-  const quiz = useQuiz();
-
+function Option({ question, dispatch, answer }) {
   return (
     <div className="options">
       {question.options.map((option, index) => (
@@ -18,7 +15,12 @@ function Option({ question, answer }) {
           )}
           disabled={answer !== null}
           key={option}
-          onClick={() => quiz.newAnswer(index)}
+          onClick={() =>
+            dispatch({
+              type: "newAnswer",
+              payload: index,
+            })
+          }
         >
           {option}
         </button>

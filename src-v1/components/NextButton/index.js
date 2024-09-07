@@ -1,13 +1,10 @@
-import { useQuiz } from "../../contexts/QuizContext";
-
-function NextButton({ children, questionsLength, index }) {
-  const quiz = useQuiz();
+function NextButton({ dispatch, children, questionsLength, index }) {
   function updateState() {
     if (index === questionsLength - 1) {
-      quiz.finished();
+      dispatch({ type: "finished" });
       return;
     } else {
-      quiz.nextQuestion();
+      dispatch({ type: "nextQuestion" });
     }
   }
 
